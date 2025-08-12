@@ -45,13 +45,13 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: docker.io
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          username: ${{ secrets.DOCKERHUB_USERNAME_DEV }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD_DEV }}
 
       - name: Push image
         if: github.event_name == 'push'
         run: |
-          TAG=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,') REPO=docker.io/kubespheredev make container-cross-push
+          TAG=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,') REPO=docker.io/kubesphereondev make container-cross-push
 
       - name: slack
         uses: 8398a7/action-slack@v3

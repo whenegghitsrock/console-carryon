@@ -8,16 +8,16 @@ name: Build Release
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: github.repository	== 'kubesphere/console'
+    if: github.repository	== 'whenegghitsrock/console-carryon'
     steps:
       - uses: actions/checkout@v2
 
       - name: Login to HUAWEICLOUD
         uses: docker/login-action@v3
         with:
-          registry: swr.cn-southwest-2.myhuaweicloud.com
-          username: ${{ secrets.HUAWEICLOUD_USERNAME }}
-          password: ${{ secrets.HUAWEICLOUD_PASSWORD }}
+          registry: registry.cn-beijing.aliyuncs.com
+          username: ${{ secrets.ALIYUN_USERNAME }}
+          password: ${{ secrets.ALIYUN_PASSWORD }}
 
       - name: Login to DOCKER
         uses: docker/login-action@v3
@@ -56,7 +56,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            docker.io/kubesphere/ks-console:${{ steps.chose_registry.outputs.tag }}
+            docker.io/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}
 
       - name: Build and push ks-console dev images
         uses: docker/build-push-action@v6
@@ -67,12 +67,12 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            docker.io/kubespheredev/ks-console:${{ steps.chose_registry.outputs.tag }}
+            docker.io/kubesphereondev/ks-console:${{ steps.chose_registry.outputs.tag }}
 
       - name: Sync ks images to HUAWEICLOUD
         if: steps.chose_registry.outputs.env == 'prod'
         run: |
           # console
-          docker pull docker.io/kubesphere/ks-console:${{ steps.chose_registry.outputs.tag }}
-          docker tag docker.io/kubesphere/ks-console:${{ steps.chose_registry.outputs.tag }} swr.cn-southwest-2.myhuaweicloud.com/ks/kubesphere/ks-console:${{ steps.chose_registry.outputs.tag }}
-          docker push swr.cn-southwest-2.myhuaweicloud.com/ks/kubesphere/ks-console:${{ steps.chose_registry.outputs.tag }}
+          docker pull docker.io/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}
+          docker tag docker.io/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }} registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}
+          docker push registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}

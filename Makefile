@@ -1,6 +1,6 @@
 
 
-REPO?=kubespheredev
+REPO?=kubesphereondev
 TAG?=$(shell git rev-parse --abbrev-ref HEAD | sed -e 's/\//-/g')
 
 .PHONY: all
