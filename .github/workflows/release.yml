@@ -25,6 +25,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+      - name: Login to DOCKERDEV
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME_DEV }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD_DEV }}
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
         with:
@@ -73,6 +79,13 @@ jobs:
         if: steps.chose_registry.outputs.env == 'prod'
         run: |
           # console
-          docker pull docker.io/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}
-          docker tag docker.io/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }} registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}
-          docker push registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}
+          docker pull --platform linux/amd64 docker.io/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}
+          docker tag docker.io/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }} registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}-amd64
+          docker push registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}-amd64
+          docker pull --platform linux/arm64 docker.io/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}
+          docker tag docker.io/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }} registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}-arm64
+          docker push registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}-arm64
+          docker manifest create registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }} registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}-arm64 registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}-amd64
+          docker manifest annotate registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }} registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}-arm64 --os linux --arch arm64
+          docker manifest annotate registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }} registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}-amd64 --os linux --arch amd64
+          docker manifest push registry.cn-beijing.aliyuncs.com/kubesphereon/ks-console:${{ steps.chose_registry.outputs.tag }}
