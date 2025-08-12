@@ -11,10 +11,10 @@ permissions:
 
 env:
   # SOURCE_OWNER: kubesphere
-  SOURCE_REPO_NAME: console
+  SOURCE_REPO_NAME: console-carryon
   SOURCE_BRANCH: master
 
-  TARGET_OWNER: kubesphere
+  TARGET_OWNER: kubesphere-carryon
   TARGET_REPO_NAME: kse-console
   TARGET_BRANCH: ksc-release-4.1
 

@@ -4,7 +4,7 @@ set -ex
 set -o pipefail
 
 TAG=${TAG:-latest}
-REPO=${REPO:-kubespheredev}
+REPO=${REPO:-kubesphereondev}
 PUSH=${PUSH:-}
 
 # support other container tools. e.g. podman
